@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gps_module_test/helper/page_gngll.dart';
 import 'package:libserialport/libserialport.dart';
 import 'dart:convert';
 import 'dart:typed_data';
+import 'dart:io';
 
+import '../element/butonlar_widget.dart';
+import '../helper/page_gngga.dart';
 import '../helper/parse_gnrmc.dart';
 
 class PageHome extends StatefulWidget {
@@ -16,11 +20,12 @@ class PageHome extends StatefulWidget {
 class _PageHomeState extends State<PageHome> {
   RxString gelenData = "".obs;
   List<String> parts = [];
+  final port = SerialPort("/dev/ttyS4");
+  RxBool gecici=true.obs;
   void oku() async {
-    final port = SerialPort("/dev/ttyS3");
     if (!port.openReadWrite()) {
       print(SerialPort.lastError);
-      //  exit(-1);
+      exit(-1);
     }
 
     final reader = SerialPortReader(port);
@@ -28,18 +33,18 @@ class _PageHomeState extends State<PageHome> {
       print('received String: ${utf8.decode(data)}');
       gelenData.value = utf8.decode(data);
 
-
-
-       parts=  gelenData.value.split(',');
-      if (parts[0] == '\$GNRMC') {
-        print("genrmc geldi"+ gelenData.value);
-        gnrmcSentence.value=gelenData.value;
+      parts = gelenData.value.split(',');
+      print('UFUK ilk String: ${utf8.decode(data)}');
+      gnggaSentence.value = gelenData.value;
+      if (parts[0] == 'GNRMC') {
+        print("GNRMC geldi" + gelenData.value);
+        gnrmcSentence.value = gelenData.value;
         throw Exception('Geçersiz GNRMC cümlesi');
       }
 
       if (parts[0] == '\$GNGLL') {
-        print("GNGLL geldi"+ gelenData.value);
-        gnrmcSentence.value=gelenData.value;
+        print("GNGLL geldi" + gelenData.value);
+        gnrmcSentence.value = gelenData.value;
         throw Exception('Geçersiz GNRMC cümlesi');
       }
     });
@@ -61,16 +66,39 @@ class _PageHomeState extends State<PageHome> {
   }
 
   @override
+  void dispose() {
+    port.close(); // Portu kapatır.
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Obx(
       () => Scaffold(
         appBar: AppBar(),
-        body: Column(
-          children: [Center(child: Text(gelenData.value)),
+        body:!gecici.value?Container(): SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Column(
+            children: [
+           //   Center(
+           //     child: Text(gelenData.value),
+           //   ),
+              maviButton(context, text: "PORTU AÇ", onPressed: () {
+                port.close();
+                oku();
+              }),
+              yesilButton(context, text: "PORTU KAPAT", onPressed: () {
+                port.close();
+              }),
 
-         //   GNRMCParser()
+              //  GNRMCParser(),
 
-          ],
+            GNGGAParser(),
+
+              //    GNGLLParser(),
+
+            ],
+          ),
         ),
       ),
     );

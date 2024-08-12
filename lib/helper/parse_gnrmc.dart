@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gps_module_test/helper/app_config.dart';
 
+import '../element/custom_text.dart';
+
 //  $GNMRMC,hhmmss.sss,A,latitude,N,longitude,E,speed,course,ddmmyy,,d
 /*
 hhmmss.sss - UTC zamanı
@@ -29,15 +31,21 @@ class GNRMCParser extends StatelessWidget {
       child: Container(
         height: 200,
 width: App(context).appWidth(100),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Row(
           children: [
-            Text('GNRMC Aktif: ${parsedData['active']}'),
-            Text('Enlem: ${parsedData['latitude']}'),
-            Text('Boylam: ${parsedData['longitude']}'),
-            Text('Hız: ${parsedData['speed']} km/saat'),
-            Text('Zaman: ${parsedData['time']} UTC'),
-            Text('Tarih: ${parsedData['date']}'),
+            CustomText(text: "GNRMC",fontWeight: FontWeight.bold,fontSize: 100,),
+
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('GNRMC Aktif: ${parsedData['active']}'),
+                Text('Enlem: ${parsedData['latitude']}'),
+                Text('Boylam: ${parsedData['longitude']}'),
+                Text('Hız: ${parsedData['speed']} km/saat'),
+                Text('Zaman: ${parsedData['time']} UTC'),
+                Text('Tarih: ${parsedData['date']}'),
+              ],
+            ),
           ],
         ),
       ),
@@ -49,26 +57,37 @@ width: App(context).appWidth(100),
     print("aliiiiii"+sentence);
     List<String> parts = sentence.split(',');
 
-    if (parts[0] != '\$GNMRMC') {
-      throw Exception('Geçersiz GNRMC cümlesi');
+    if (parts[0] != '\$GNRMC') {
+
+      return {
+        'active':  'Hayır',
+        'latitude': "-",
+        'longitude': "-",
+        'speed': "-",
+        'time': "-",
+        'date': "-",
+      };
+
+    }else{
+
+      // Verileri çıkarın
+      String time = parseTime(parts[1]);
+      bool isActive = parts[2] == 'A';
+      String latitude = parseLatitudeLongitude(parts[3], parts[4]);
+      String longitude = parseLatitudeLongitude(parts[5], parts[6]);
+      String speed = parts[7];
+      String date = parseDate(parts[9]);
+
+      return {
+        'active': isActive ? 'Evet' : 'Hayır',
+        'latitude': latitude,
+        'longitude': longitude,
+        'speed': speed,
+        'time': time,
+        'date': date,
+      };
     }
 
-    // Verileri çıkarın
-    String time = parseTime(parts[1]);
-    bool isActive = parts[2] == 'A';
-    String latitude = parseLatitudeLongitude(parts[3], parts[4]);
-    String longitude = parseLatitudeLongitude(parts[5], parts[6]);
-    String speed = parts[7];
-    String date = parseDate(parts[9]);
-
-    return {
-      'active': isActive ? 'Evet' : 'Hayır',
-      'latitude': latitude,
-      'longitude': longitude,
-      'speed': speed,
-      'time': time,
-      'date': date,
-    };
   }
 
   String parseTime(String value) {

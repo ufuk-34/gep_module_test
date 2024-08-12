@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:wakelock/wakelock.dart';
 
@@ -25,14 +26,32 @@ class _MyApp0State extends State<MyApp0> {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-        title: "KK Multimedya",
-        theme: ThemeData(
-          primarySwatch: Colors.teal,
-        ),
+    return ScreenUtilInit(
+      designSize: const Size(412, 732),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      // Use builder only if you need to use library outside ScreenUtilInit context
+      builder: (_, child) {
+        return MaterialApp(
 
+
+          debugShowCheckedModeBanner: false,
+          title: 'GPS TEST FLUTTER',
+          // You can use the library anywhere in the app even in theme
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+            textTheme: Typography.englishLike2018.apply(fontSizeFactor: 1.sp),
+          ),
+          home: child,
+        );
+      },
+      child: GetMaterialApp(
+        title: 'Cep Emlak',
         debugShowCheckedModeBanner: false,
-        home: PageHome());
+        home: PageHome(),
+
+      ),
+    );
 
   }
 
