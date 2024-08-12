@@ -13,44 +13,41 @@ class GNGGAParser extends StatelessWidget {
     Map<String, String> parsedData = parseGNGGA(gnggaSentence.value);
 
     return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          decoration:
-              BoxDecoration(border: Border.all(color: Colors.indigo, width: 3)),
-          height: 250, // Yüksekliği artırdık çünkü daha fazla veri gösteriyoruz
-          width: App(context).appWidth(100),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                CustomText(
-                  text: "GNGGA",
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                   // Text(parsedData['fixQuality'].toString()),
+      child: Container(
+        decoration:
+            BoxDecoration(border: Border.all(color: Colors.indigo, width: 3)),
+        height: 250, // Yüksekliği artırdık çünkü daha fazla veri gösteriyoruz
+        width: App(context).appWidth(100),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              CustomText(
+                text: "GNGGA",
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                 // Text(parsedData['fixQuality'].toString()),
 
-                    item("Fix Durumu", parsedData['fixQuality'].toString()),
-                    item("Enlem", parsedData['latitude'].toString()),
-                    item("Boylam", parsedData['longitude'].toString()),
-                  ],
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    item("Uydu Sayısı", parsedData['numSats'].toString()),
-                    item("Zaman", '${parsedData['time']} UTC'),
-                  ],
-                ),
-              ],
-            ),
+                  item("Fix Durumu", parsedData['fixQuality'].toString()),
+                  item("Enlem", parsedData['latitude'].toString()),
+                  item("Boylam", parsedData['longitude'].toString()),
+                ],
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  item("Uydu Sayısı", parsedData['numSats'].toString()),
+                  item("Zaman", '${parsedData['time']} UTC'),
+                ],
+              ),
+            ],
           ),
         ),
       ),
@@ -73,10 +70,10 @@ class GNGGAParser extends StatelessWidget {
     } else {
       // Verileri çıkarın
       String time = parseTime(parts[1]);
-      String latitude = parseLatitudeLongitude(parts[2], parts[3]);
-      String longitude = parseLatitudeLongitude(parts[4], parts[5]);
+      String latitude =  parts[2];
+      String longitude = parts[4];
       String altitude = parts[9]; // Yükseklik
-      String fixQuality = parts[6] == '1' ? 'GPS Fix Mevcut' : 'GPS Fix Yok';
+      String fixQuality = parts[6] == '1' ? 'AKTİF' : 'GPS Fix Yok';
       String numSats = parts[7]; // Uydu sayısı
 
       return {

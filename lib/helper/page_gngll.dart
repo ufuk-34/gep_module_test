@@ -63,8 +63,8 @@ class GNGLLParser extends StatelessWidget {
     } else {
 
       // Verileri çıkarın
-      String latitude = parseLatitudeLongitude(parts[1], parts[2]);
-      String longitude = parseLatitudeLongitude(parts[3], parts[4]);
+      String latitude = parts[1];
+      String longitude =parts[3];
       String time = parseTime(parts[5]);
       String status = parts[6] == 'A' ? 'Aktif' : 'Geçersiz';
 

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gps_module_test/helper/constant.dart';
@@ -22,6 +24,7 @@ class _PageHomeState extends State<PageHome> {
   List<String> parts = [];
   final port = SerialPort("/dev/ttyS4");
   RxBool gecici = true.obs;
+  late Timer _timer;
 
   void oku() async {
     if (!port.openReadWrite()) {
@@ -65,11 +68,15 @@ class _PageHomeState extends State<PageHome> {
   void initState() {
     oku();
     super.initState();
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {});
+    });
   }
 
   @override
   void dispose() {
     port.close(); // Portu kapatır.
+    _timer.cancel(); // Timer'ı kapat
     super.dispose();
   }
 
@@ -91,13 +98,13 @@ class _PageHomeState extends State<PageHome> {
                       setState(() {});
                     }),
                     heightSpace15,
-                    maviButton(context, text: "PORTU AÇ", onPressed: () {
-                      port.close();
-                      oku();
-                    }),
-                    yesilButton(context, text: "PORTU KAPAT", onPressed: () {
-                      port.close();
-                    }),
+                    // maviButton(context, text: "PORTU AÇ", onPressed: () {
+                    //   port.close();
+                    //   oku();
+                    // }),
+                    // yesilButton(context, text: "PORTU KAPAT", onPressed: () {
+                    //   port.close();
+                    // }),
 
                     heightSpace45,
                     GNRMCParser(),

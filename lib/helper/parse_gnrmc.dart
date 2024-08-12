@@ -45,7 +45,7 @@ class GNRMCParser extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  item("GNRMC Aktif", parsedData['active'].toString()),
+                  item("Fix Durumu", parsedData['active'].toString()),
                   item("Enlem", parsedData['latitude'].toString()),
                   item("Boylam", parsedData['longitude'].toString()),
                 ],
@@ -85,13 +85,13 @@ class GNRMCParser extends StatelessWidget {
       // Verileri çıkarın
       String time = parseTime(parts[1]);
       bool isActive = parts[2] == 'A';
-      String latitude = parseLatitudeLongitude(parts[3], parts[4]);
-      String longitude = parseLatitudeLongitude(parts[5], parts[6]);
+      String latitude =  parts[3];
+      String longitude =  parts[5];
       String speed = parts[7];
       String date = parseDate(parts[9]);
 
       return {
-        'active': isActive ? 'Evet' : 'Hayır',
+        'active': isActive ? 'Aktif' : 'Aktif',
         'latitude': latitude,
         'longitude': longitude,
         'speed': speed,
@@ -121,10 +121,14 @@ class GNRMCParser extends StatelessWidget {
   String parseLatitudeLongitude(String value, String direction) {
     if (value.isEmpty) return ' - ';
 
-    double degrees = double.parse(value.substring(0, 2));
-    double minutes = double.parse(value.substring(2));
+    // Değerin dereceler ve dakikalar kısmını ayırın
+    double degrees = double.parse(value.substring(0, value.length - 2)); // ilk iki haneli dereceler
+    double minutes = double.parse(value.substring(value.length - 2)); // son iki haneli dakikalar
+
+    // Dereceler ve dakikalar toplamı
     double result = degrees + (minutes / 60);
 
+    // Yönü kontrol edin
     if (direction == 'S' || direction == 'W') {
       result *= -1;
     }

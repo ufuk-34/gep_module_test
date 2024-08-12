@@ -6,7 +6,7 @@ import '../../helper/app_config.dart';
 import 'custom_text.dart';
 
 Padding maviButton(BuildContext context,
-    {text, onPressed, genislikYuzdesi = 80.0, heightt = 55.0}) {
+    {text, onPressed, genislikYuzdesi = 40.0, heightt = 65.0}) {
   return Padding(
     padding: EdgeInsets.only(top: 0),
     child: Container(
