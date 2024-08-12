@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:gps_module_test/element/custom_text.dart';
 import 'package:gps_module_test/helper/app_config.dart';
 
+
 RxString gnggaSentence = "".obs;
 
 class GNGGAParser extends StatelessWidget {
@@ -33,6 +34,8 @@ class GNGGAParser extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                   // Text(parsedData['fixQuality'].toString()),
+
                     item("Fix Durumu", parsedData['fixQuality'].toString()),
                     item("Enlem", parsedData['latitude'].toString()),
                     item("Boylam", parsedData['longitude'].toString()),
@@ -115,16 +118,16 @@ Widget item(String t, String l) {
     children: [
       CustomText(
         text: t,
-        fontSize: 11,
+        fontSize: 10,
         fontWeight: FontWeight.bold,
       ),
       CustomText(
         text: ' : ',
-        fontSize: 9,
+        fontSize: 8,
       ),
       CustomText(
         text: l,
-        fontSize: 9,
+        fontSize: 8,
       ),
     ],
   );

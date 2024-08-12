@@ -15,7 +15,7 @@ Padding maviButton(BuildContext context,
       child: ElevatedButton(
         child: CustomText(
           text: text,
-          fontSize: 12,
+          fontSize: 7,
           fontWeight: FontWeight.bold,
           color: Colors.white,
         ),

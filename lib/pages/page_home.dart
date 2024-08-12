@@ -6,7 +6,6 @@ import 'package:libserialport/libserialport.dart';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:io';
-
 import '../element/butonlar_widget.dart';
 import '../helper/page_gngga.dart';
 import '../helper/parse_gnrmc.dart';
@@ -32,22 +31,23 @@ class _PageHomeState extends State<PageHome> {
 
     final reader = SerialPortReader(port);
     reader.stream.listen((data) {
-      print('received String: ${utf8.decode(data)}');
-      gelenData.value = utf8.decode(data);
+      ///   *******************
+      ///
 
-      parts = gelenData.value.split(',');
-      print('UFUK ilk String: ${utf8.decode(data)}');
-      gnggaSentence.value = gelenData.value;
-      if (parts[0] == 'GNRMC') {
-        print("GNRMC geldi" + gelenData.value);
-        gnrmcSentence.value = gelenData.value;
-        throw Exception('Geçersiz GNRMC cümlesi');
-      }
-
-      if (parts[0] == '\$GNGLL') {
-        print("GNGLL geldi" + gelenData.value);
-        gnrmcSentence.value = gelenData.value;
-        throw Exception('Geçersiz GNRMC cümlesi');
+      String dataStr = String.fromCharCodes(data);
+      // Split data by new lines to process each line individually
+      List<String> lines = dataStr.split('\n');
+      for (String line in lines) {
+        if (line.startsWith('\$GNRMC')) {
+          gnrmcSentence.value = line;
+          print('Received GNRMC UFUK : $line');
+        } else if (line.startsWith('\$GNGGA')) {
+          gnggaSentence.value = line;
+          print('Received GNGGA UFUK : $line');
+        } else if (line.startsWith('\$GNGLL')) {
+          gngllSentence.value = line;
+          print('Received GNGLL UFUK : $line');
+        }
       }
     });
   }
@@ -87,6 +87,10 @@ class _PageHomeState extends State<PageHome> {
                     //   Center(
                     //     child: Text(gelenData.value),
                     //   ),
+                    maviButton(context, text: "YENILE", onPressed: () {
+                      setState(() {});
+                    }),
+                    heightSpace15,
                     maviButton(context, text: "PORTU AÇ", onPressed: () {
                       port.close();
                       oku();
@@ -94,6 +98,7 @@ class _PageHomeState extends State<PageHome> {
                     yesilButton(context, text: "PORTU KAPAT", onPressed: () {
                       port.close();
                     }),
+
                     heightSpace45,
                     GNRMCParser(),
                     heightSpace15,
