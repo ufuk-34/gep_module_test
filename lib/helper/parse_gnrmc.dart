@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:gps_module_test/helper/app_config.dart';
 
 import '../element/custom_text.dart';
+import 'page_gngga.dart';
 
 //  $GNMRMC,hhmmss.sss,A,latitude,N,longitude,E,speed,course,ddmmyy,,d
 /*
@@ -33,14 +34,29 @@ class GNRMCParser extends StatelessWidget {
 width: App(context).appWidth(100),
         child: Row(
           children: [
-            CustomText(text: "GNRMC",fontWeight: FontWeight.bold,fontSize: 100,),
+            CustomText(text: "GNRMC",fontWeight: FontWeight.bold,fontSize: 20,),
 
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('GNRMC Aktif: ${parsedData['active']}'),
-                Text('Enlem: ${parsedData['latitude']}'),
-                Text('Boylam: ${parsedData['longitude']}'),
+                item("GNRMC Aktif", parsedData['active'].toString()),
+                item("Enlem", parsedData['latitude'].toString()),
+                item("Boylam", parsedData['longitude'].toString()),
+              ],
+            ),
+
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                item("Hız", "${parsedData['speed']} km/saat"),
+                item("Zaman", "${parsedData['time']}UTC"),
+                item("Tarih", parsedData['date'].toString()),
+              ],
+            ),
+
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
                 Text('Hız: ${parsedData['speed']} km/saat'),
                 Text('Zaman: ${parsedData['time']} UTC'),
                 Text('Tarih: ${parsedData['date']}'),

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:gps_module_test/helper/app_config.dart';
 
 import '../element/custom_text.dart';
+import 'page_gngga.dart';
 
 RxString gngllSentence = "".obs;
 
@@ -18,15 +19,23 @@ class GNGLLParser extends StatelessWidget {
         width: App(context).appWidth(100),
         child: Row(
           children: [
-            CustomText(text: "GNGLL",fontWeight: FontWeight.bold,fontSize: 100,),
-
+            CustomText(
+              text: "GNGLL",
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Fix Durumu: ${parsedData['status']}'),
-                Text('Enlem: ${parsedData['latitude']}'),
-                Text('Boylam: ${parsedData['longitude']}'),
-                Text('Zaman: ${parsedData['time']} UTC'),
+                item("Fix Durumu", parsedData['status'].toString()),
+                item("Enlem", parsedData['latitude'].toString()),
+                item("Boylam", parsedData['longitude'].toString()),
+              ],
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                item("Zaman", "${parsedData['time']}UTC"),
               ],
             ),
           ],
