@@ -17,32 +17,37 @@ class GNGGAParser extends StatelessWidget {
         child: Container(
           decoration:
               BoxDecoration(border: Border.all(color: Colors.indigo, width: 3)),
-          height: 300, // Yüksekliği artırdık çünkü daha fazla veri gösteriyoruz
+          height: 250, // Yüksekliği artırdık çünkü daha fazla veri gösteriyoruz
           width: App(context).appWidth(100),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              CustomText(
-                text: "GNGGA",
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  item("Fix Durumu", parsedData['fixQuality'].toString()),
-                  item("Enlem", parsedData['latitude'].toString()),
-                  item("Boylam", parsedData['longitude'].toString()),
-                ],
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  item("Uydu Sayısı", parsedData['numSats'].toString()),
-                  item("Zaman", '${parsedData['time']} UTC'),
-                ],
-              ),
-            ],
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                CustomText(
+                  text: "GNGGA",
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    item("Fix Durumu", parsedData['fixQuality'].toString()),
+                    item("Enlem", parsedData['latitude'].toString()),
+                    item("Boylam", parsedData['longitude'].toString()),
+                  ],
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    item("Uydu Sayısı", parsedData['numSats'].toString()),
+                    item("Zaman", '${parsedData['time']} UTC'),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -55,12 +60,12 @@ class GNGGAParser extends StatelessWidget {
 
     if (parts[0] != '\$GNGGA') {
       return {
-        'fixQuality': 'Bilgi Yok',
-        'latitude': 'Bilgi Yok',
-        'longitude': 'Bilgi Yok',
-        'altitude': 'Bilgi Yok',
-        'numSats': 'Bilgi Yok',
-        'time': 'Bilgi Yok',
+        'fixQuality': ' - ',
+        'latitude': ' - ',
+        'longitude': ' - ',
+        'altitude': ' - ',
+        'numSats': ' - ',
+        'time': ' - ',
       };
     } else {
       // Verileri çıkarın
@@ -83,14 +88,14 @@ class GNGGAParser extends StatelessWidget {
   }
 
   String parseTime(String value) {
-    if (value.isEmpty) return 'Bilgi Yok';
+    if (value.isEmpty) return ' - ';
 
     // Zamanı saat:dakika:saniye formatına çevir
     return '${value.substring(0, 2)}:${value.substring(2, 4)}:${value.substring(4, 6)}';
   }
 
   String parseLatitudeLongitude(String value, String direction) {
-    if (value.isEmpty) return 'Bilgi Yok';
+    if (value.isEmpty) return ' - ';
 
     double degrees = double.parse(value.substring(0, 2));
     double minutes = double.parse(value.substring(2));
@@ -110,16 +115,16 @@ Widget item(String t, String l) {
     children: [
       CustomText(
         text: t,
-        fontSize: 12,
+        fontSize: 11,
         fontWeight: FontWeight.bold,
       ),
       CustomText(
         text: ' : ',
-        fontSize: 10,
+        fontSize: 9,
       ),
       CustomText(
         text: l,
-        fontSize: 10,
+        fontSize: 9,
       ),
     ],
   );

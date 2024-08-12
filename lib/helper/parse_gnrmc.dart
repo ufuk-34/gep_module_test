@@ -16,7 +16,6 @@ course - Kurs (derece)
 ddmmyy - Tarih (gün/ay/yıl)
  */
 
-
 //RxString gnrmcSentence = '\$GNMRMC,123456.00,A,4824.1234,N,00135.6789,W,12.34,56.78,091223,,0000';
 RxString gnrmcSentence = "".obs;
 
@@ -30,39 +29,39 @@ class GNRMCParser extends StatelessWidget {
 
     return Center(
       child: Container(
-        height: 200,
-width: App(context).appWidth(100),
-        child: Row(
-          children: [
-            CustomText(text: "GNRMC",fontWeight: FontWeight.bold,fontSize: 20,),
+        height: 250,
+        width: App(context).appWidth(100),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              CustomText(
+                text: "GNRMC",
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  item("GNRMC Aktif", parsedData['active'].toString()),
+                  item("Enlem", parsedData['latitude'].toString()),
+                  item("Boylam", parsedData['longitude'].toString()),
+                ],
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  item("Hız", "${parsedData['speed']} km/saat"),
+                  item("Zaman", "${parsedData['time']}UTC"),
+                  item("Tarih", parsedData['date'].toString()),
+                ],
+              ),
 
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                item("GNRMC Aktif", parsedData['active'].toString()),
-                item("Enlem", parsedData['latitude'].toString()),
-                item("Boylam", parsedData['longitude'].toString()),
-              ],
-            ),
-
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                item("Hız", "${parsedData['speed']} km/saat"),
-                item("Zaman", "${parsedData['time']}UTC"),
-                item("Tarih", parsedData['date'].toString()),
-              ],
-            ),
-
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Hız: ${parsedData['speed']} km/saat'),
-                Text('Zaman: ${parsedData['time']} UTC'),
-                Text('Tarih: ${parsedData['date']}'),
-              ],
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -70,22 +69,19 @@ width: App(context).appWidth(100),
 
   Map<dynamic, dynamic> parseGNRMC(String sentence) {
     // Cümleyi parçalara ayırın
-    print("aliiiiii"+sentence);
+    print("aliiiiii" + sentence);
     List<String> parts = sentence.split(',');
 
     if (parts[0] != '\$GNRMC') {
-
       return {
-        'active':  'Hayır',
-        'latitude': "-",
-        'longitude': "-",
-        'speed': "-",
-        'time': "-",
-        'date': "-",
+        'active': ' - ',
+        'latitude': " - ",
+        'longitude': " - ",
+        'speed': " - ",
+        'time': " - ",
+        'date': " - ",
       };
-
-    }else{
-
+    } else {
       // Verileri çıkarın
       String time = parseTime(parts[1]);
       bool isActive = parts[2] == 'A';
@@ -103,18 +99,17 @@ width: App(context).appWidth(100),
         'date': date,
       };
     }
-
   }
 
   String parseTime(String value) {
-    if (value.isEmpty) return 'Bilgi Yok';
+    if (value.isEmpty) return ' - ';
 
     // Zamanı saat:dakika:saniye formatına çevir
     return '${value.substring(0, 2)}:${value.substring(2, 4)}:${value.substring(4, 6)}';
   }
 
   String parseDate(String value) {
-    if (value.isEmpty) return 'Bilgi Yok';
+    if (value.isEmpty) return ' - ';
 
     // Tarihi gün/ay/yıl formatına çevir
     String day = value.substring(0, 2);
@@ -124,7 +119,7 @@ width: App(context).appWidth(100),
   }
 
   String parseLatitudeLongitude(String value, String direction) {
-    if (value.isEmpty) return 'Bilgi Yok';
+    if (value.isEmpty) return ' - ';
 
     double degrees = double.parse(value.substring(0, 2));
     double minutes = double.parse(value.substring(2));

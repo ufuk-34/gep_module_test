@@ -15,7 +15,7 @@ Padding maviButton(BuildContext context,
       child: ElevatedButton(
         child: CustomText(
           text: text,
-          fontSize: 18,
+          fontSize: 12,
           fontWeight: FontWeight.bold,
           color: Colors.white,
         ),
@@ -55,7 +55,7 @@ Padding yesilButton(BuildContext context,
       child: ElevatedButton(
         child: CustomText(
           text: text,
-          fontSize: 18,
+          fontSize: 12,
           fontWeight: FontWeight.bold,
           color: Colors.white,
         ),
