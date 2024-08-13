@@ -47,45 +47,45 @@ class GNGLLParser extends StatelessWidget {
         ),
       ),
     );
-  }
 
+  }
   Map<String, String> parseGNGLL(String sentence) {
     // Cümleyi parçalara ayırın
     List<String> parts = sentence.split(',');
 
-    if (parts[0] != '\$GNGLL') {
+    // Cümle uygun değilse varsayılan değerler döndür
+    if (parts.isEmpty || parts[0] != '\$GNGLL') {
       return {
         'status': ' - ',
         'latitude': ' - ',
         'longitude': ' - ',
         'time': ' - ',
       };
-    } else {
-
-      // Verileri çıkarın
-      String latitude = parts[1];
-      String longitude =parts[3];
-      String time = parseTime(parts[5]);
-      String status = parts[6] == 'A' ? 'Aktif' : 'Geçersiz';
-
-      return {
-        'status': status,
-        'latitude': latitude,
-        'longitude': longitude,
-        'time': time,
-      };
     }
+
+    // Eksik veri kontrolü ve çıkarma
+    String latitude = (parts.length > 1 && parts[1].isNotEmpty) ? parseLatitudeLongitude(parts[1], parts[2]) : ' - ';
+    String longitude = (parts.length > 3 && parts[3].isNotEmpty) ? parseLatitudeLongitude(parts[3], parts[4]) : ' - ';
+    String time = (parts.length > 5 && parts[5].isNotEmpty) ? parseTime(parts[5]) : ' - ';
+    String status = (parts.length > 6 && parts[6].isNotEmpty) ? (parts[6] == 'A' ? 'Aktif' : 'Geçersiz') : ' - ';
+
+    return {
+      'status': status,
+      'latitude': latitude,
+      'longitude': longitude,
+      'time': time,
+    };
   }
 
   String parseTime(String value) {
-    if (value.isEmpty) return ' - ';
+    if (value.isEmpty || value.length < 6) return ' - ';
 
     // Zamanı saat:dakika:saniye formatına çevir
     return '${value.substring(0, 2)}:${value.substring(2, 4)}:${value.substring(4, 6)}';
   }
 
   String parseLatitudeLongitude(String value, String direction) {
-    if (value.isEmpty) return ' - ';
+    if (value.isEmpty || direction.isEmpty) return ' - ';
 
     double degrees = double.parse(value.substring(0, 2));
     double minutes = double.parse(value.substring(2));
@@ -97,4 +97,6 @@ class GNGLLParser extends StatelessWidget {
 
     return result.toStringAsFixed(4);
   }
+
+
 }

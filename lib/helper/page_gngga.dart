@@ -58,7 +58,8 @@ class GNGGAParser extends StatelessWidget {
     // Cümleyi parçalara ayırın
     List<String> parts = sentence.split(',');
 
-    if (parts[0] != '\$GNGGA') {
+    // Eğer cümle uygun değilse varsayılan değerler döndür
+    if (parts.isEmpty || parts[0] != '\$GNGGA') {
       return {
         'fixQuality': ' - ',
         'latitude': ' - ',
@@ -67,35 +68,35 @@ class GNGGAParser extends StatelessWidget {
         'numSats': ' - ',
         'time': ' - ',
       };
-    } else {
-      // Verileri çıkarın
-      String time = parseTime(parts[1]);
-      String latitude =  parts[2];
-      String longitude = parts[4];
-      String altitude = parts[9]; // Yükseklik
-      String fixQuality = parts[6] == '1' ? 'AKTİF' : 'GPS Fix Yok';
-      String numSats = parts[7]; // Uydu sayısı
-
-      return {
-        'fixQuality': fixQuality,
-        'latitude': latitude,
-        'longitude': longitude,
-        'altitude': altitude,
-        'numSats': numSats,
-        'time': time,
-      };
     }
+
+    // Eksik veri kontrolü ve çıkarma
+    String time = (parts.length > 1 && parts[1].isNotEmpty) ? parseTime(parts[1]) : ' - ';
+    String latitude = (parts.length > 2 && parts[2].isNotEmpty) ? parseLatitudeLongitude(parts[2], parts[3]) : ' - ';
+    String longitude = (parts.length > 4 && parts[4].isNotEmpty) ? parseLatitudeLongitude(parts[4], parts[5]) : ' - ';
+    String altitude = (parts.length > 9 && parts[9].isNotEmpty) ? parts[9] : ' - ';
+    String fixQuality = (parts.length > 6 && parts[6].isNotEmpty) ? (parts[6] == '1' ? 'AKTİF' : 'GPS Fix Yok') : ' - ';
+    String numSats = (parts.length > 7 && parts[7].isNotEmpty) ? parts[7] : ' - ';
+
+    return {
+      'fixQuality': fixQuality,
+      'latitude': latitude,
+      'longitude': longitude,
+      'altitude': altitude,
+      'numSats': numSats,
+      'time': time,
+    };
   }
 
   String parseTime(String value) {
-    if (value.isEmpty) return ' - ';
+    if (value.isEmpty || value.length < 6) return ' - ';
 
     // Zamanı saat:dakika:saniye formatına çevir
     return '${value.substring(0, 2)}:${value.substring(2, 4)}:${value.substring(4, 6)}';
   }
 
   String parseLatitudeLongitude(String value, String direction) {
-    if (value.isEmpty) return ' - ';
+    if (value.isEmpty || direction.isEmpty) return ' - ';
 
     double degrees = double.parse(value.substring(0, 2));
     double minutes = double.parse(value.substring(2));
@@ -107,6 +108,7 @@ class GNGGAParser extends StatelessWidget {
 
     return result.toStringAsFixed(4);
   }
+
 }
 
 Widget item(String t, String l) {
